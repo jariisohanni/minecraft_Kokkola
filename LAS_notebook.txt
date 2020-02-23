@@ -1,0 +1,21 @@
+NOTE: this just notebook for repo author how map for generated.
+
+Data downloaded as LAS (stereo, LIDAR) tile files from:
+https://tiedostopalvelu.maanmittauslaitos.fi/tp/kartta
+
+Commands used to generate map with LAStools
+
+1. First define ground for each LAS tile
+/usr/local/bin/wine /Users/admin/Downloads/LAStools/bin/lasground_new -i "/Users/admin/Downloads/las/TILE_ID/*.laz" -metro -fine -odir "/Users/admin/Downloads/las/TILE_ID" -cores 4
+
+2. Classify Lidar points for each LAS tile:
+/usr/local/bin/wine /Users/admin/Downloads/LAStools/bin/lasclassify -i "/Users/admin/Downloads/las/TILE_ID/*.laz" -odir "/Users/admin/Downloads/las/TILE_ID" -cores 4
+
+3. Merge LAS 2x2 tiles into one tile:
+/usr/local/bin/wine /Users/admin/Downloads/LAStools/bin/lasmerge -i "/Users/admin/Downloads/las/Q4121B/*.laz" -o "/Users/admin/Downloads/las/Q4121B.laz"
+
+4. Merge new tiles to one huge tile:
+/usr/local/bin/wine /Users/admin/Downloads/LAStools/bin/lasmerge -i "/Users/admin/Downloads/las/*.laz" -o "/Users/admin/Downloads/las/final.laz"
+
+5. Make PNG of tile:
+/usr/local/bin/wine /Users/admin/Downloads/LAStools/bin/blast2dem -i "/Users/admin/Downloads/las/*.laz" -keep_class 2 -step 2.0 -opng -gray
